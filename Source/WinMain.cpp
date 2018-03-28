@@ -1,8 +1,7 @@
 #include <stdio.h>
 
 #include "Application.h"
-
-#include "CreateWindow\WindowWin32.h"
+#include "Windows\WindowWin32.h"
 
 
 int main() 
@@ -17,8 +16,7 @@ int main()
 
 	// 2. Init App
 	Application newApp;
-	newApp.Init(window.GetWindowhandle(), window.windowWidth, window.windowHeight);
-	
+
 	// 3. Main Loop 
 	while (isLive)
 	{

@@ -28,9 +28,9 @@ WindowWin32::WindowWin32()
 
 void WindowWin32::Init(char* name, int width, int height)
 {
-	this->windowWidth = width;
+	/*this->windowWidth = width;
 	this->windowHeight = height;
-	this->nameWindow = name;
+	this->nameWindow = name;*/
 	
 	HINSTANCE hInstance = GetModuleHandle(NULL);
 
@@ -56,11 +56,11 @@ void WindowWin32::Init(char* name, int width, int height)
 
 	cs.x = 0;	// Window X position
 	cs.y = 0;	// Window Y position
-	cs.cx = 640;	// Window width
-	cs.cy = 480;	// Window height
+	cs.cx = width;	// Window width
+	cs.cy = height;	// Window height
 	cs.hInstance = hInstance; // Window instance.
 	cs.lpszClass = wcex.lpszClassName;		// Window class name
-	cs.lpszName = TEXT("My First Window");	// Window title
+	cs.lpszName = TEXT(name);	// Window title
 	cs.style = WS_OVERLAPPEDWINDOW;		// Window style
 
 										// Create the window.

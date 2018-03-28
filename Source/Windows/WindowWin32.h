@@ -13,9 +13,9 @@ public:
 
 	void* GetWindowhandle();
 
-	int windowWidth;
+	/*int windowWidth;
 	int windowHeight;
-	char* nameWindow;
+	char* nameWindow;*/
 
 	MSG msg;
 

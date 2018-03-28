@@ -111,12 +111,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Source\Application.cpp" />
-    <ClCompile Include="..\..\..\Source\CreateWindow\WindowWin32.cpp" />
+    <ClCompile Include="..\..\..\Source\Windows\WindowWin32.cpp" />
     <ClCompile Include="..\..\..\Source\WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Source\Application.h" />
-    <ClInclude Include="..\..\..\Source\CreateWindow\WindowWin32.h" />
+    <ClInclude Include="..\..\..\Source\Windows\WindowWin32.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
