@@ -1,23 +1,21 @@
 // HelloWorld
 //------------------------------------------------------------------------------
 
-// Windows Platform (VS 2013 Compiler, Windows 7.1A SDK)
+// Android Platform (NDK r15)
 //------------------------------------------------------------------------------
-.VSBasePath         = 'C:\Program Files (x86)\Microsoft Visual Studio 14.0'
-.WindowsSDKBasePath = 'C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A'
+.NDKPath         = 'D:\DevTools\Android\sdk\ndk-bundle'
 
 // Settings
 //------------------------------------------------------------------------------
 Settings
 {
-    .Environment    = { "PATH=$VSBasePath$\Common7\IDE\;$VSBasePath$\VC\bin\",
-                        "TMP=C:\Windows\Temp",
+    .Environment    = { "TMP=C:\Windows\Temp",
                         "SystemRoot=C:\Windows" }
 }
 
 // X86 ToolChain
 //------------------------------------------------------------------------------
-.Compiler           = '$VSBasePath$\VC\bin\cl.exe'
+.Compiler           = '$NDKPath$\toolchains\llvm\prebuilt\windows-x86_64\bin\clang++.exe'
 .CompilerOptions    = '"%1"'           // Input
                     + ' /Fo"%2"'       // Output
                     + ' /Z7'           // Debug format (in .obj)
@@ -25,7 +23,7 @@ Settings
                     + ' /nologo'       // No compiler spam
                     + ' /W4'           // Warning level 4
                     + ' /WX'           // Warnings as errors
-.Linker             = '$VSBasePath$\VC\bin\link.exe'
+.Linker             = '$NDKPath$\toolchains\llvm\prebuilt\windows-x86_64\bin\clang++.exe'
 .LinkerOptions      = ' /OUT:"%2"'     // Output
                     + ' "%1"'          // Input
                     + ' /WX'           // Warnings as errors
@@ -36,18 +34,15 @@ Settings
 // Include paths
 //------------------------------------------------------------------------------
 .BaseIncludePaths   = ' /I"./"'
-                    + ' /I"$VSBasePath$/VC/include/"'
-                    + ' /I"C:\Program Files (x86)\Windows Kits\8.1\Include"'
-                    + ' /I"C:\Program Files (x86)\Windows Kits\8.1\Include\um"'
-                    + ' /I"C:\Program Files (x86)\Windows Kits\8.1\Include\shared"'
-                    + ' /I"C:\Program Files (x86)\Windows Kits\10\Include\10.0.10240.0\ucrt"'
+                    + ' /I"$NDKPath$/sysroot/usr/include"'
+                    + ' /I"$NDKPath$/sources/cxx-stl/llvm-libc++/include"'
+                    + ' /I"$NDKPath$/platforms/android-21/arch-arm/usr/include"'
 .CompilerOptions    + .BaseIncludePaths
 
 // Library paths
 //------------------------------------------------------------------------------
-.LibPaths           = ' /LIBPATH:"$WindowsSDKBasePath$\Lib"'
-                    + ' /LIBPATH:"C:\Program Files (x86)\Windows Kits\10\Lib\10.0.14393.0\ucrt\x86"'
-                    + ' /LIBPATH:"$VSBasePath$\VC\lib"'
+.LibPaths           = ' /I"./"'           
+                    + ' /I"./android/Out"'
 
 .LinkerOptions      + .LibPaths
 
@@ -56,13 +51,13 @@ Settings
 ObjectList( 'HelloWorld-Lib' )
 {
     .CompilerInputPath  = '\'
-    .CompilerOutputPath = '\Win32\Out\'
+    .CompilerOutputPath = '\android\Out\'
 }
 
 Executable( 'HelloWorld' )
 {
     .Libraries          = { "HelloWorld-Lib" }
-    .LinkerOutput       = 'Win32\Out\HelloWorld.exe'
+    .LinkerOutput       = 'android\Out\HelloWorld.so'
     .LinkerOptions      + ' libcmt.lib'     // Std Lib (Multi-Threaded, Static, Release)
                         + ' kernel32.lib'   // Kernel functions
 }
