@@ -18,6 +18,7 @@ echo.
 echo 0. Clean
 echo 1. Build Data
 echo 2. Build Win32
+echo 3. Build SO
 
 echo 99. Exit
 
@@ -45,7 +46,7 @@ REM------------ 02. Build Win32
 	call %FBUILD%\FBuild.exe -config %FBUILD_CONFIG_WIN32%
 goto :End	
 
-REM------------ 02. Build SO
+REM------------ 03. Build SO
 	echo Build SO
 	cd %FBUILD%
 	call %FBUILD%\FBuild.exe -config %FBUILD_CONFIG_NATIVE%

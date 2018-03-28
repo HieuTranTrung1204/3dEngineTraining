@@ -37,6 +37,10 @@ Settings
 //------------------------------------------------------------------------------
 .BaseIncludePaths   = ' /I"./"'
                     + ' /I"$VSBasePath$/VC/include/"'
+                    + ' /I"C:\Program Files (x86)\Windows Kits\8.1\Include"'
+                    + ' /I"C:\Program Files (x86)\Windows Kits\8.1\Include\um"'
+                    + ' /I"C:\Program Files (x86)\Windows Kits\8.1\Include\shared"'
+                    + ' /I"C:\Program Files (x86)\Windows Kits\10\Include\10.0.10240.0\ucrt"'
 .CompilerOptions    + .BaseIncludePaths
 
 // Library paths
@@ -52,13 +56,13 @@ Settings
 ObjectList( 'HelloWorld-Lib' )
 {
     .CompilerInputPath  = '\'
-    .CompilerOutputPath = 'Out\'
+    .CompilerOutputPath = '\Win32\Out\'
 }
 
 Executable( 'HelloWorld' )
 {
     .Libraries          = { "HelloWorld-Lib" }
-    .LinkerOutput       = 'Out\HelloWorld.exe'
+    .LinkerOutput       = 'Win32\Out\HelloWorld.exe'
     .LinkerOptions      + ' libcmt.lib'     // Std Lib (Multi-Threaded, Static, Release)
                         + ' kernel32.lib'   // Kernel functions
 }

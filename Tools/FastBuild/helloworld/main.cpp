@@ -1,7 +1,7 @@
-// #include "stdio.h"
+#include "stdio.h"
 
 int main(int, char[])
 {
-    // printf( "Hello!\n" );
+    printf( "Hello!\n" );
     return 0;
 }
