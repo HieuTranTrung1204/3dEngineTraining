@@ -1,0 +1,74 @@
+// HelloWorld
+//------------------------------------------------------------------------------
+
+// Windows Platform (VS 2013 Compiler, Windows 7.1A SDK)
+//------------------------------------------------------------------------------
+.VSBasePath         = 'C:\Program Files (x86)\Microsoft Visual Studio 14.0'
+.WindowsSDKBasePath = 'C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A'
+
+// Settings
+//------------------------------------------------------------------------------
+Settings
+{
+    .Environment    = { "PATH=$VSBasePath$\Common7\IDE\;$VSBasePath$\VC\bin\",
+                        "TMP=C:\Windows\Temp",
+                        "SystemRoot=C:\Windows" }
+}
+
+// X86 ToolChain
+//------------------------------------------------------------------------------
+.Compiler           = '$VSBasePath$\VC\bin\cl.exe'
+.CompilerOptions    = '"%1"'           // Input
+                    + ' /Fo"%2"'       // Output
+                    + ' /Z7'           // Debug format (in .obj)
+                    + ' /c'            // Compile only
+                    + ' /nologo'       // No compiler spam
+                    + ' /W4'           // Warning level 4
+                    // TODO + ' /WX'           // Warnings as errors
+.Linker             = '$VSBasePath$\VC\bin\link.exe'
+.LinkerOptions      = ' /OUT:"%2"'     // Output
+                    + ' "%1"'          // Input
+                    // TODO  + ' /WX'           // Warnings as errors
+                    + ' /NOLOGO'       // No linker spam
+                    + ' /DEBUG'        // Keep debug info when linking
+                    // TODO  + ' /NODEFAULTLIB' // We'll specify the libs explicitly
+
+// Include paths
+//------------------------------------------------------------------------------
+.BaseIncludePaths   = ' /I"./"'
+                    + ' /I"$VSBasePath$/VC/include/"'
+                    + ' /I"C:\Program Files (x86)\Windows Kits\8.1\Include"'
+                    + ' /I"C:\Program Files (x86)\Windows Kits\8.1\Include\um"'
+                    + ' /I"C:\Program Files (x86)\Windows Kits\8.1\Include\shared"'
+                    + ' /I"C:\Program Files (x86)\Windows Kits\10\Include\10.0.10240.0\ucrt"'
+.CompilerOptions    + .BaseIncludePaths
+
+// Library paths
+//------------------------------------------------------------------------------
+.LibPaths           = ' /LIBPATH:"$WindowsSDKBasePath$\Lib"'
+                    + ' /LIBPATH:"C:\Program Files (x86)\Windows Kits\10\Lib\10.0.14393.0\ucrt\x86"'
+                    + ' /LIBPATH:"C:\Program Files (x86)\Windows Kits\8.1\Lib\winv6.3\um\x86"'
+                    + ' /LIBPATH:"$VSBasePath$\VC\lib"'
+
+.LinkerOptions      + .LibPaths
+
+// NativeEngine3D
+//------------------------------------------------------------------------------
+ObjectList( 'NativeEngine3D-Lib' )
+{
+    .CompilerInputPath  = '..\..\Source\'
+    .CompilerOutputPath = '..\..\Bin\Win32\'
+}
+
+Executable( 'NativeEngine3D' )
+{
+    .Libraries          = { "NativeEngine3D-Lib" }
+    .LinkerOutput       = '..\..\Bin\Win32\NativeEngine3D.exe'
+    .LinkerOptions      + ' libcmt.lib'     // Std Lib (Multi-Threaded, Static, Release)
+                        + ' kernel32.lib'   // Kernel functions
+                        + ' User32.lib'   // User32 functions
+}
+
+// All
+//------------------------------------------------------------------------------
+Alias( 'all' ) { .Targets = { 'NativeEngine3D' } }

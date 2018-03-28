@@ -3,6 +3,8 @@ cls
 set CUR_PATH=%~dp0 
 
 set FBUILD=%~dp0\Tools\FastBuild
+set FBUILD_CONFIG_WIN32=%~dp0\Tools\BuildWin32\fbuild.bff
+set FBUILD_CONFIG_NATIVE=%~dp0\Tools\BuildNative\fbuild.bff
 
 color 02
 echo.
@@ -38,13 +40,15 @@ goto :End
 
 REM------------ 02. Build Win32
 :Build_Win32
-
 	echo Build win32
 	cd %FBUILD%
-	call %FBUILD%\FBuild.exe 
+	call %FBUILD%\FBuild.exe -config %FBUILD_CONFIG_WIN32%
 goto :End	
 
 REM------------ 02. Build SO
+	echo Build SO
+	cd %FBUILD%
+	call %FBUILD%\FBuild.exe -config %FBUILD_CONFIG_NATIVE%
 :Build_SO
 
 goto :End	
