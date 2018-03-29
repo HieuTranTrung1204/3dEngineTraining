@@ -1,74 +1,59 @@
 // HelloWorld
 //------------------------------------------------------------------------------
 
-// Windows Platform (VS 2013 Compiler, Windows 7.1A SDK)
+// Android Platform (NDK r15)
 //------------------------------------------------------------------------------
-.VSBasePath         = 'C:\Program Files (x86)\Microsoft Visual Studio 14.0'
-.WindowsSDKBasePath = 'C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A'
-
+.NDKRoot         = 'D:\DevTools\Android\sdk\ndk-bundle'
+.NDKPlatform     = 'android-21'
+.OutputBuild     = "D:\Gameloft\3dEngineTraining\Tools\FastBuild\helloworld\android\out" 
 // Settings
 //------------------------------------------------------------------------------
 Settings
 {
-    .Environment    = { "PATH=$VSBasePath$\Common7\IDE\;$VSBasePath$\VC\bin\",
-                        "TMP=C:\Windows\Temp",
-                        "SystemRoot=C:\Windows" }
+    .Environment    = {}
 }
-
-// X86 ToolChain
-//------------------------------------------------------------------------------
-.Compiler           = '$VSBasePath$\VC\bin\cl.exe'
-.CompilerOptions    = '"%1"'           // Input
-                    + ' /Fo"%2"'       // Output
-                    + ' /Z7'           // Debug format (in .obj)
-                    + ' /c'            // Compile only
-                    + ' /nologo'       // No compiler spam
-                    + ' /W4'           // Warning level 4
-                    // TODO + ' /WX'           // Warnings as errors
-.Linker             = '$VSBasePath$\VC\bin\link.exe'
-.LinkerOptions      = ' /OUT:"%2"'     // Output
-                    + ' "%1"'          // Input
-                    // TODO  + ' /WX'           // Warnings as errors
-                    + ' /NOLOGO'       // No linker spam
-                    + ' /DEBUG'        // Keep debug info when linking
-                    // TODO  + ' /NODEFAULTLIB' // We'll specify the libs explicitly
 
 // Include paths
 //------------------------------------------------------------------------------
-.BaseIncludePaths   = ' /I"./"'
-                    + ' /I"$VSBasePath$/VC/include/"'
-                    + ' /I"C:\Program Files (x86)\Windows Kits\8.1\Include"'
-                    + ' /I"C:\Program Files (x86)\Windows Kits\8.1\Include\um"'
-                    + ' /I"C:\Program Files (x86)\Windows Kits\8.1\Include\shared"'
-                    + ' /I"C:\Program Files (x86)\Windows Kits\10\Include\10.0.10240.0\ucrt"'
-.CompilerOptions    + .BaseIncludePaths
+.BaseIncludePaths   = ' -I"$NDKRoot$/sysroot/usr/include"'
+                    + ' -I"$NDKRoot$/sources/cxx-stl/llvm-libc++/include"'
+                    + ' -I"$NDKRoot$/platforms/android-21/arch-arm/usr/include"'
 
-// Library paths
+// Compile 
 //------------------------------------------------------------------------------
-.LibPaths           = ' /LIBPATH:"$WindowsSDKBasePath$\Lib"'
-                    + ' /LIBPATH:"C:\Program Files (x86)\Windows Kits\10\Lib\10.0.14393.0\ucrt\x86"'
-                    + ' /LIBPATH:"C:\Program Files (x86)\Windows Kits\8.1\Lib\winv6.3\um\x86"'
-                    + ' /LIBPATH:"$VSBasePath$\VC\lib"'
+.Compiler           = '$NDKRoot$\toolchains\llvm\prebuilt\windows-x86_64\bin\clang++.exe'
+.CompilerOptions    = .BaseIncludePaths
+                    + ' -target armv7-none-linux-androideabi -c %1 -o %2'          
 
-.LinkerOptions      + .LibPaths
-
-// NativeEngine3D
+// Linker 
 //------------------------------------------------------------------------------
-ObjectList( 'NativeEngine3D-Lib' )
+.Linker             = '$NDKRoot$\toolchains\llvm\prebuilt\windows-x86_64\bin\clang++.exe'
+.LinkerOptions      = ' -Wl,-soname,%2 -shared %1 -lstdc++ -lGLESv2 -llog -lc -lm -lz -ldl -lgcc -landroid -lOpenSLES -lEGL -lgcc '     
+                    + ' -gcc-toolchain $NDKRoot$\toolchains\arm-linux-androideabi-4.9\prebuilt\windows-x86_64'
+                    + ' -march=armv7-a'
+                    + ' -target armv7-none-linux-androideabi'
+                    + ' --sysroot=$NDKRoot$\platforms\android-21\arch-arm'
+                    + '  -o %2'
+
+// Natvie .o
+//------------------------------------------------------------------------------
+ObjectList( 'android' )
 {
-    .CompilerInputPath  = '..\..\Source\'
-    .CompilerOutputPath = '..\..\Bin\Win32\'
+    .CompilerInputPath          = '..\..\Source'
+    .CompilerOutputPath         = '..\..\Build\Android'
+    .CompilerOutputExtension    = '.o'
+
+    .CompilerInputExcludedFiles = 'WinMain.cpp'
+    .CompilerInputExcludePath   = '..\..\Source\Windows'
 }
 
-Executable( 'NativeEngine3D' )
+// Natvie .so
+Executable( 'libNatvie3d' )
 {
-    .Libraries          = { "NativeEngine3D-Lib" }
-    .LinkerOutput       = '..\..\Bin\Win32\NativeEngine3D.exe'
-    .LinkerOptions      + ' libcmt.lib'     // Std Lib (Multi-Threaded, Static, Release)
-                        + ' kernel32.lib'   // Kernel functions
-                        + ' User32.lib'   // User32 functions
+    .Libraries          = { "android" }
+    .LinkerOutput       = '..\..\Build\android\libNatvie3d.so'
 }
 
 // All
 //------------------------------------------------------------------------------
-Alias( 'all' ) { .Targets = { 'NativeEngine3D' } }
+Alias( 'all' ) { .Targets = { 'libNatvie3d' } }

@@ -28,6 +28,7 @@ set /p opt=Enter choose:
 if "%opt%"=="0" goto Clean
 if "%opt%"=="1" goto Build_Data
 if "%opt%"=="2" goto Build_Win32
+if "%opt%"=="3" goto Build_Native
 
 REM 00. Clean GIT
 :Clean
@@ -47,6 +48,7 @@ REM------------ 02. Build Win32
 goto :End	
 
 REM------------ 03. Build SO
+:Build_Native
 	echo Build SO
 	cd %FBUILD%
 	call %FBUILD%\FBuild.exe -config %FBUILD_CONFIG_NATIVE%

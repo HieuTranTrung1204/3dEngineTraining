@@ -57,13 +57,13 @@ Settings
 ObjectList( 'NativeEngine3D-Lib' )
 {
     .CompilerInputPath  = '..\..\Source\'
-    .CompilerOutputPath = '..\..\Bin\Win32\'
+    .CompilerOutputPath = '..\..\Build\Win32\'
 }
 
 Executable( 'NativeEngine3D' )
 {
     .Libraries          = { "NativeEngine3D-Lib" }
-    .LinkerOutput       = '..\..\Bin\Win32\NativeEngine3D.exe'
+    .LinkerOutput       = '..\..\Build\Win32\NativeEngine3D.exe'
     .LinkerOptions      + ' libcmt.lib'     // Std Lib (Multi-Threaded, Static, Release)
                         + ' kernel32.lib'   // Kernel functions
                         + ' User32.lib'   // User32 functions
