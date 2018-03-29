@@ -15,7 +15,15 @@ Settings
                         "SystemRoot=C:\Windows" }
 }
 
-// X86 ToolChain
+// Include paths
+//------------------------------------------------------------------------------
+.BaseIncludePaths   = ' /I"$VSBasePath$/VC/include/"'
+                    + ' /I"C:\Program Files (x86)\Windows Kits\8.1\Include"'
+                    + ' /I"C:\Program Files (x86)\Windows Kits\8.1\Include\um"'
+                    + ' /I"C:\Program Files (x86)\Windows Kits\8.1\Include\shared"'
+                    + ' /I"C:\Program Files (x86)\Windows Kits\10\Include\10.0.10240.0\ucrt"'
+
+// Compiler
 //------------------------------------------------------------------------------
 .Compiler           = '$VSBasePath$\VC\bin\cl.exe'
 .CompilerOptions    = '"%1"'           // Input
@@ -25,23 +33,7 @@ Settings
                     + ' /nologo'       // No compiler spam
                     + ' /W4'           // Warning level 4
                     + ' /WX'           // Warnings as errors
-.Linker             = '$VSBasePath$\VC\bin\link.exe'
-.LinkerOptions      = ' /OUT:"%2"'     // Output
-                    + ' "%1"'          // Input
-                    + ' /WX'           // Warnings as errors
-                    + ' /NOLOGO'       // No linker spam
-                    + ' /DEBUG'        // Keep debug info when linking
-                    //+ ' /NODEFAULTLIB' // We'll specify the libs explicitly // TODO
-
-// Include paths
-//------------------------------------------------------------------------------
-.BaseIncludePaths   = ' /I"./"'
-                    + ' /I"$VSBasePath$/VC/include/"'
-                    + ' /I"C:\Program Files (x86)\Windows Kits\8.1\Include"'
-                    + ' /I"C:\Program Files (x86)\Windows Kits\8.1\Include\um"'
-                    + ' /I"C:\Program Files (x86)\Windows Kits\8.1\Include\shared"'
-                    + ' /I"C:\Program Files (x86)\Windows Kits\10\Include\10.0.10240.0\ucrt"'
-.CompilerOptions    + .BaseIncludePaths
+                    + .BaseIncludePaths
 
 // Library paths
 //------------------------------------------------------------------------------
@@ -49,13 +41,22 @@ Settings
                     + ' /LIBPATH:"C:\Program Files (x86)\Windows Kits\10\Lib\10.0.14393.0\ucrt\x86"'
                     + ' /LIBPATH:"$VSBasePath$\VC\lib"'
 
-.LinkerOptions      + .LibPaths
+// Linker
+//------------------------------------------------------------------------------
+.Linker             = '$VSBasePath$\VC\bin\link.exe'
+.LinkerOptions      = ' /OUT:"%2"'     // Output
+                    + ' "%1"'          // Input
+                    + ' /WX'           // Warnings as errors
+                    + ' /NOLOGO'       // No linker spam
+                    + ' /DEBUG'        // Keep debug info when linking
+                    + .LibPaths
 
 // HelloWorld
-//------------------------------------------------------------------------------
+//--------------------------------------------  ----------------------------------
 ObjectList( 'HelloWorld-Lib' )
 {
-    .CompilerInputPath  = '\'
+    // .CompilerInputPath  = '\'
+    .CompilerInputFiles  = '\main.cpp'
     .CompilerOutputPath = '\Win32\Out\'
 }
 

@@ -3,65 +3,56 @@
 
 // Android Platform (NDK r15)
 //------------------------------------------------------------------------------
-.NDKPath         = 'D:\DevTools\Android\sdk\ndk-bundle'
-
+.NDKRoot         = 'D:\DevTools\Android\sdk\ndk-bundle'
+.NDKPlatform     = 'android-21'
+.OutputBuild     = "D:\Gameloft\3dEngineTraining\Tools\FastBuild\helloworld\android\out" 
 // Settings
 //------------------------------------------------------------------------------
 Settings
 {
-    .Environment    = { "TMP=C:\Windows\Temp",
-                        "SystemRoot=C:\Windows" }
+    .Environment    = {}
 }
-
-// X86 ToolChain
-//------------------------------------------------------------------------------
-.Compiler           = '$NDKPath$\toolchains\llvm\prebuilt\windows-x86_64\bin\clang++.exe'
-.CompilerOptions    = '"%1"'           // Input
-                    + ' /Fo"%2"'       // Output
-                    + ' /Z7'           // Debug format (in .obj)
-                    + ' /c'            // Compile only
-                    + ' /nologo'       // No compiler spam
-                    + ' /W4'           // Warning level 4
-                    + ' /WX'           // Warnings as errors
-.Linker             = '$NDKPath$\toolchains\llvm\prebuilt\windows-x86_64\bin\clang++.exe'
-.LinkerOptions      = ' /OUT:"%2"'     // Output
-                    + ' "%1"'          // Input
-                    + ' /WX'           // Warnings as errors
-                    + ' /NOLOGO'       // No linker spam
-                    + ' /DEBUG'        // Keep debug info when linking
-                    //+ ' /NODEFAULTLIB' // We'll specify the libs explicitly // TODO
 
 // Include paths
 //------------------------------------------------------------------------------
-.BaseIncludePaths   = ' /I"./"'
-                    + ' /I"$NDKPath$/sysroot/usr/include"'
-                    + ' /I"$NDKPath$/sources/cxx-stl/llvm-libc++/include"'
-                    + ' /I"$NDKPath$/platforms/android-21/arch-arm/usr/include"'
-.CompilerOptions    + .BaseIncludePaths
+.BaseIncludePaths   = ' -I"$NDKRoot$/sysroot/usr/include"'
+                    + ' -I"$NDKRoot$/sources/cxx-stl/llvm-libc++/include"'
+                    + ' -I"$NDKRoot$/platforms/android-21/arch-arm/usr/include"'
 
-// Library paths
+// Compile 
 //------------------------------------------------------------------------------
-.LibPaths           = ' /I"./"'           
-                    + ' /I"./android/Out"'
+.Compiler           = '$NDKRoot$\toolchains\llvm\prebuilt\windows-x86_64\bin\clang++.exe'
+.CompilerOptions    = .BaseIncludePaths
+                    + ' -target armv7-none-linux-androideabi -c %1 -o %2'          
 
-.LinkerOptions      + .LibPaths
-
-// HelloWorld
+// Linker 
 //------------------------------------------------------------------------------
-ObjectList( 'HelloWorld-Lib' )
+.Linker             = '$NDKRoot$\toolchains\llvm\prebuilt\windows-x86_64\bin\clang++.exe'
+.LinkerOptions      = ' -Wl,-soname,%2 -shared %1 -lstdc++ -lGLESv2 -llog -lc -lm -lz -ldl -lgcc -landroid -lOpenSLES -lEGL -lgcc '     
+                    + ' -gcc-toolchain $NDKRoot$\toolchains\arm-linux-androideabi-4.9\prebuilt\windows-x86_64'
+                    + ' -march=armv7-a'
+                    + ' -target armv7-none-linux-androideabi'
+                    + ' --sysroot=$NDKRoot$\platforms\android-21\arch-arm'
+                    + '  -o %2'
+
+// Natvie .o
+//------------------------------------------------------------------------------
+ObjectList( 'android' )
 {
-    .CompilerInputPath  = '\'
-    .CompilerOutputPath = '\android\Out\'
+    .CompilerInputPath          = '.\'
+    .CompilerOutputPath         = '\android\Out'
+    .CompilerOutputExtension    = '.o'
+
+    .CompilerInputExcludedFiles = 'main.cpp'
 }
 
-Executable( 'HelloWorld' )
+// Natvie .so
+Executable( 'libNatvie3d' )
 {
-    .Libraries          = { "HelloWorld-Lib" }
-    .LinkerOutput       = 'android\Out\HelloWorld.so'
-    .LinkerOptions      + ' libcmt.lib'     // Std Lib (Multi-Threaded, Static, Release)
-                        + ' kernel32.lib'   // Kernel functions
+    .Libraries          = { "android" }
+    .LinkerOutput       = '\android\Out\libNatvie3d.so'
 }
 
 // All
 //------------------------------------------------------------------------------
-Alias( 'all' ) { .Targets = { 'HelloWorld' } }
+Alias( 'all' ) { .Targets = { 'libNatvie3d' } }
