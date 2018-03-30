@@ -38,6 +38,14 @@ if "%opt%"=="4" goto Build_Apk
 if "%opt%"=="5" goto Build_Full
 
 REM-------------------------Function--------------------------
+:fClean
+	echo Clear ....
+	call git clean -fd
+	call git clean -f -x -d
+	call git clean -fxd
+	call git clean -fd
+	call reset --hard
+	exit /b
 :fBuild_Native
 	echo Build SO
 	cd %FBUILD%
@@ -54,7 +62,7 @@ REM-----------------------------------------------------------
 
 REM------------ 00. Clean GIT.-------------
 :Clean
-
+	call :fClean
 goto :End
 
 REM------------ 01. Build Data-------------
