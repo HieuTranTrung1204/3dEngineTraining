@@ -20,18 +20,10 @@ Settings
 .Compiler           = '$VSBasePath$\VC\bin\cl.exe'
 .CompilerOptions    = '"%1"'           // Input
                     + ' /Fo"%2"'       // Output
-                    + ' /Z7'           // Debug format (in .obj)
                     + ' /c'            // Compile only
-                    + ' /nologo'       // No compiler spam
-                    + ' /W4'           // Warning level 4
-                    // TODO + ' /WX'           // Warnings as errors
 .Linker             = '$VSBasePath$\VC\bin\link.exe'
 .LinkerOptions      = ' /OUT:"%2"'     // Output
                     + ' "%1"'          // Input
-                    // TODO  + ' /WX'           // Warnings as errors
-                    + ' /NOLOGO'       // No linker spam
-                    + ' /DEBUG'        // Keep debug info when linking
-                    // TODO  + ' /NODEFAULTLIB' // We'll specify the libs explicitly
 
 // Include paths
 //------------------------------------------------------------------------------
@@ -51,6 +43,7 @@ Settings
                     + ' /LIBPATH:"$VSBasePath$\VC\lib"'
 
 .LinkerOptions      + .LibPaths
+                    + '  User32.lib'
 
 // NativeEngine3D
 //------------------------------------------------------------------------------
@@ -58,15 +51,14 @@ ObjectList( 'NativeEngine3D-Lib' )
 {
     .CompilerInputPath  = '..\..\Source\'
     .CompilerOutputPath = '..\..\Build\Win32\'
+
+    .CompilerInputExcludePath   = '..\..\Source\Android'
 }
 
 Executable( 'NativeEngine3D' )
 {
     .Libraries          = { "NativeEngine3D-Lib" }
     .LinkerOutput       = '..\..\Build\Win32\NativeEngine3D.exe'
-    .LinkerOptions      + ' libcmt.lib'     // Std Lib (Multi-Threaded, Static, Release)
-                        + ' kernel32.lib'   // Kernel functions
-                        + ' User32.lib'   // User32 functions
 }
 
 // All
