@@ -51,7 +51,7 @@ ObjectList( 'android' )
 Executable( 'libNatvie3d' )
 {
     .Libraries          = { "android" }
-    .LinkerOutput       = '..\..\Build\android\libNatvie3d.so'
+    .LinkerOutput       = '..\..\Prj\Android\app\src\main\jniLibs\armeabi-v7a\libNatvie3d.so'
 }
 
 // All
