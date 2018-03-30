@@ -37,7 +37,22 @@ if "%opt%"=="3" goto Build_Native
 if "%opt%"=="4" goto Build_Apk
 if "%opt%"=="5" goto Build_Full
 
-REM 00. Clean GIT
+REM-------------------------Function--------------------------
+:fBuild_Native
+	echo Build SO
+	cd %FBUILD%
+	call %FBUILD%\FBuild.exe -config %FBUILD_CONFIG_NATIVE%
+	exit /b
+:fBuild_Apk
+	echo Build APK
+	cd %Prj_ANDROID%
+	call gradlew.bat assembleDebug
+	adb install -r app\build\outputs\apk\debug\app-debug.apk
+	adb shell am start -n "hieu.com.a3dengine/hieu.com.a3dengine.MainActivity" -a android.intent.action.MAIN -c android.intent.category.LAUNCHER
+	exit /b
+REM-----------------------------------------------------------
+
+REM------------ 00. Clean GIT.-------------
 :Clean
 
 goto :End
@@ -57,19 +72,13 @@ goto :End
 
 REM------------ 03. Build SO---------------
 :Build_Native
-	echo Build SO
-	cd %FBUILD%
-	call %FBUILD%\FBuild.exe -config %FBUILD_CONFIG_NATIVE%
+	call :fBuild_Native
 goto :End	
 REM----------------------------------------
 
 REM------------ 03. Build APK---------------
 :Build_Apk
-	echo Build APK
-	cd %Prj_ANDROID%
-	call gradlew.bat assembleDebug
-	adb install -r app\build\outputs\apk\debug\app-debug.apk
-	adb shell am start -n "hieu.com.a3dengine/hieu.com.a3dengine.MainActivity" -a android.intent.action.MAIN -c android.intent.category.LAUNCHER
+	call :fBuild_Apk
 
 goto :End	
 REM----------------------------------------
@@ -77,9 +86,9 @@ REM----------------------------------------
 REM------------ 03. Build Full---------------
 :Build_Full
 	echo Build Full SO + Apk
-	goto Build_Native
-	
-	goto Build_Apk
+
+	call :fBuild_Native
+	call :fBuild_Apk
 	
 goto :End	
 REM----------------------------------------
