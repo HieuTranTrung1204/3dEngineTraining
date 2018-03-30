@@ -11,23 +11,24 @@ set Prj_ANDROID=%~dp0\\Prj\Android
 
 color 02
 echo.
-echo    ===================================
-echo    ===============MENU================
-echo    ===================================
+echo 	===================================
+echo 	===============MENU================
+echo 	===================================
 echo.
-echo WorkiNG ON: %CUR_PATH%
+echo 	  Working ON: %CUR_PATH%
 echo.
 
-echo 0. Clean
-echo 1. Build Data
-echo 2. Build Win32
-echo 3. Build SO
-echo 4. Build APK Debug
+echo 	0. Clean
+echo 	1. Build Data
+echo 	2. Build Win32
+echo 	3. Build SO
+echo 	4. Build APK Debug
+echo 	5. Build Full (SO + Apk)
 
-echo 99. Exit
+echo 	99. Exit
 
 echo.
-set /p opt=Enter choose: 
+set /p opt=		Enter choose: 
 
 if "%opt%"=="0" goto Clean
 if "%opt%"=="1" goto Build_Data
@@ -59,7 +60,6 @@ REM------------ 03. Build SO---------------
 	echo Build SO
 	cd %FBUILD%
 	call %FBUILD%\FBuild.exe -config %FBUILD_CONFIG_NATIVE%
-:Build_SO
 goto :End	
 REM----------------------------------------
 
@@ -70,10 +70,19 @@ REM------------ 03. Build APK---------------
 	call gradlew.bat assembleDebug
 	adb install -r app\build\outputs\apk\debug\app-debug.apk
 	adb shell am start -n "hieu.com.a3dengine/hieu.com.a3dengine.MainActivity" -a android.intent.action.MAIN -c android.intent.category.LAUNCHER
-:Build_SO
+
 goto :End	
 REM----------------------------------------
 
+REM------------ 03. Build Full---------------
+:Build_Full
+	echo Build Full SO + Apk
+	goto Build_Native
+	
+	goto Build_Apk
+	
+goto :End	
+REM----------------------------------------
 
 :End
 
