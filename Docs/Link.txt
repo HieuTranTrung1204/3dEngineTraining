@@ -1,3 +1,9 @@
 	
-	1. Create Window Win32: https://www.codementor.io/malortie/build-win32-api-application-window-c-cpp-visual-studio-du107nrh6
-	2. FastBuild: http://www.fastbuild.org/docs/download.html
+	1. Create Window Win32
+			https://www.codementor.io/malortie/build-win32-api-application-window-c-cpp-visual-studio-du107nrh6
+	
+	2. FastBuild
+			http://www.fastbuild.org/docs/download.html
+	
+	3. Add Lib .so to Android studio project
+			https://stackoverflow.com/questions/24357687/how-to-include-so-library-in-android-studio
